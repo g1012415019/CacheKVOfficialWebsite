@@ -662,17 +662,16 @@
             z-index: 2;
         }
 
-        /* 简洁边框动画 */
+        /* 线条围绕边框运动动画 */
         .core-code-highlight {
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            border: 2px solid #4facfe;
+            border: 2px solid #2a2a3e;
             border-radius: 12px;
             padding: 20px;
             margin: 20px 0;
             position: relative;
             overflow: hidden;
             box-shadow: 0 8px 32px rgba(79, 172, 254, 0.3);
-            animation: borderGlow 2s ease-in-out infinite alternate;
         }
 
         .core-code-highlight::before {
@@ -691,14 +690,41 @@
             z-index: 1;
         }
 
-        @keyframes borderGlow {
-            0% { 
-                border-color: #4facfe;
-                box-shadow: 0 8px 32px rgba(79, 172, 254, 0.3);
+        .core-code-highlight::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 14px;
+            background: 
+                linear-gradient(90deg, #4facfe 0%, #4facfe 25%, transparent 25%, transparent 100%),
+                linear-gradient(180deg, #4facfe 0%, #4facfe 25%, transparent 25%, transparent 100%),
+                linear-gradient(270deg, #4facfe 0%, #4facfe 25%, transparent 25%, transparent 100%),
+                linear-gradient(0deg, #4facfe 0%, #4facfe 25%, transparent 25%, transparent 100%);
+            background-size: 100% 2px, 2px 100%, 100% 2px, 2px 100%;
+            background-position: 0 0, 100% 0, 100% 100%, 0 100%;
+            background-repeat: no-repeat;
+            animation: borderRun 4s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes borderRun {
+            0% {
+                background-position: -25% 0, 100% -25%, 125% 100%, 0 125%;
             }
-            100% { 
-                border-color: #00f2fe;
-                box-shadow: 0 8px 32px rgba(0, 242, 254, 0.5);
+            25% {
+                background-position: 100% 0, 100% 100%, 125% 100%, 0 125%;
+            }
+            50% {
+                background-position: 100% 0, 125% 100%, 0% 100%, 0 125%;
+            }
+            75% {
+                background-position: 100% 0, 125% 100%, 0% 100%, 0 -25%;
+            }
+            100% {
+                background-position: -25% 0, 125% 100%, 0% 100%, 0 -25%;
             }
         }
 
@@ -1046,7 +1072,7 @@ $data = kv_get('user.profile', ['id' => 123], function() {
 
         <div class="quote-section">
             <div class="quote-text">
-                "在数字化的渐变光谱中，CacheKV以科技美学重新定义缓存操作，让每一行代码都散发着未来感的光芒。"
+                "让每一行代码都散发着未来感的光芒。"
             </div>
         </div>
 
