@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>CacheKV - PHP缓存库 | 简化缓存操作的专业解决方案</title>
+    <meta name="description" content="CacheKV是专业的PHP缓存库，实现"若无则从数据源获取并回填缓存"模式。支持Redis，提供批量操作、热点键管理、统计监控等功能。">
+    <meta name="keywords" content="PHP缓存,Redis缓存,缓存库,PHP cache,缓存管理,批量缓存,热点键">
+    <meta name="author" content="CacheKV Team">
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+    <link rel="canonical" href="https://cachekv.com/">
+    <meta property="og:title" content="CacheKV - PHP缓存库">
+    <meta property="og:description" content="专业的PHP缓存解决方案，简化缓存操作">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://cachekv.com/">
+    <meta property="og:image" content="https://cachekv.com/og-image.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="CacheKV - PHP缓存库">
+    <meta name="twitter:description" content="专业的PHP缓存解决方案，简化缓存操作">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <meta name="theme-color" content="#2563eb">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "CacheKV",
+      "description": "专业的PHP缓存库，实现若无则从数据源获取并回填缓存的核心模式",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Cross-platform",
+      "programmingLanguage": "PHP",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "CacheKV Team"
+      },
+      "downloadUrl": "https://packagist.org/packages/asfop/cache-kv",
+      "codeRepository": "https://github.com/g1012415019/CacheKV",
+      "license": "https://opensource.org/licenses/MIT"
+    }
+    </script>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link href="../assets/css/prism-tomorrow.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+    
+    <header id="header">
+        <nav>
+            <div class="logo">CacheKV</div>
+            <ul>
+                <li><a href="#features">功能特性</a></li>
+                <li><a href="#quickstart">快速开始</a></li>
+                <li><a href="https://github.com/g1012415019/CacheKV">GitHub</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main role="main">
+        <section class="hero" aria-labelledby="hero-title">
+            <h1 id="hero-title">CacheKV - 专业的PHP缓存库</h1>
+            <p>简化缓存操作，一行代码实现缓存逻辑</p>
+            <div class="cta">
+                <a href="#quickstart" class="btn-primary" aria-label="开始使用CacheKV">立即开始</a>
+                <a href="https://packagist.org/packages/asfop/cache-kv" class="btn-secondary" rel="noopener" target="_blank" aria-label="在Packagist查看CacheKV">Packagist</a>
+            </div>
+            <div class="code-preview" role="img" aria-label="代码示例">
+                <pre><code class="language-php">// 一行代码搞定缓存
+$user = kv_get('user', ['id' => 123], function() {
+    return $db->find(123);
+});</code></pre>
+            </div>
+        </section>
+
+        <section id="features" class="features" aria-labelledby="features-title">
+            <h2 id="features-title">核心功能</h2>
+            <div class="feature-grid" role="list">
+                <article class="feature" role="listitem">
+                    <h3>🎯 自动回填缓存</h3>
+                    <p>缓存未命中时自动执行回调并缓存结果，简化开发流程</p>
+                </article>
+                <article class="feature" role="listitem">
+                    <h3>⚡ 批量操作支持</h3>
+                    <p>支持批量获取缓存数据，减少网络请求次数</p>
+                </article>
+                <article class="feature" role="listitem">
+                    <h3>🔥 热点键管理</h3>
+                    <p>自动检测并延长热点数据的缓存时间</p>
+                </article>
+                <article class="feature" role="listitem">
+                    <h3>📊 统计监控</h3>
+                    <p>提供命中率统计、热点键分析等监控功能</p>
+                </article>
+                <article class="feature" role="listitem">
+                    <h3>🛡️ 稳定可靠</h3>
+                    <p>基于Redis构建，异常处理完善</p>
+                </article>
+                <article class="feature" role="listitem">
+                    <h3>🔧 简单易用</h3>
+                    <p>简洁的API设计，快速集成到现有项目</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="examples">
+            <h2>使用示例</h2>
+            <div class="example-grid">
+                <div class="example-item">
+                    <h3>基础用法</h3>
+                    <div class="code-toolbar">
+                        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                        <pre><code class="language-php">// 获取用户信息
+$user = kv_get('user', ['id' => 1], function() {
+    return User::find(1);
+}, 3600);</code></pre>
+                    </div>
+                </div>
+                <div class="example-item">
+                    <h3>批量获取</h3>
+                    <div class="code-toolbar">
+                        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                        <pre><code class="language-php">// 批量获取用户
+$users = kv_get_multi('user', [
+    ['id' => 1], ['id' => 2]
+], function($keys) {
+    return User::findMany($keys);
+});</code></pre>
+                    </div>
+                </div>
+                <div class="example-item">
+                    <h3>删除缓存</h3>
+                    <div class="code-toolbar">
+                        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                        <pre><code class="language-php">// 删除指定缓存
+kv_delete('user', ['id' => 1]);
+
+// 按前缀删除
+kv_delete_prefix('user');</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="quickstart" class="quickstart" aria-labelledby="quickstart-title">
+            <h2 id="quickstart-title">5分钟快速上手</h2>
+            <article class="install">
+                <h3>1. 安装依赖</h3>
+                <div class="code-toolbar">
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    <pre><code class="language-bash">composer require asfop/cache-kv</code></pre>
+                </div>
+            </article>
+            <article class="usage">
+                <h3>2. 配置Redis连接</h3>
+                <div class="code-toolbar">
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    <pre><code class="language-php">&lt;?php
+require_once 'vendor/autoload.php';
+use Asfop\CacheKV\Core\CacheKVFactory;
+
+// 配置Redis连接
+CacheKVFactory::configure(function () {
+    $redis = new Redis();
+    $redis->connect('127.0.0.1', 6379);
+    // $redis->auth('your_password'); // 如果需要密码
+    return $redis;
+});</code></pre>
+                </div>
+            </article>
+            <article class="usage">
+                <h3>3. 开始使用</h3>
+                <div class="code-toolbar">
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    <pre><code class="language-php">// 单个数据获取
+$user = kv_get(
+    'user.profile',
+    ['id' => 123],
+    function () {
+        return $this->userService->getUserById(123);
+    },
+    3600
+);
+
+// 批量数据获取
+$users = kv_get_multi(
+    'user.profile',
+    [
+        ['id' => 1],
+        ['id' => 2],
+        ['id' => 3]
+    ],
+    function ($missedKeys) {
+        $data = [];
+        foreach ($missedKeys as $cacheKey) {
+            $params = $cacheKey->getParams();
+            $data[(string) $cacheKey] = $this->userService->getUserById($params['id']);
+        }
+        return $data;
+    }
+);
+
+// 删除缓存
+kv_delete('user.profile', ['id' => 123]);
+
+// 获取统计信息
+$stats = kv_stats();
+echo "缓存命中率: " . $stats['hit_rate'];</code></pre>
+                </div>
+            </article>
+        </section>
+
+        <section class="stats" aria-labelledby="stats-title">
+            <h2 id="stats-title">技术规格</h2>
+            <div class="stat-grid" role="list">
+                <article class="stat" role="listitem">
+                    <div class="number">PHP 7.0+</div>
+                    <div class="label">版本支持</div>
+                </article>
+                <article class="stat" role="listitem">
+                    <div class="number">Redis</div>
+                    <div class="label">缓存后端</div>
+                </article>
+                <article class="stat" role="listitem">
+                    <div class="number">MIT</div>
+                    <div class="label">开源协议</div>
+                </article>
+                <article class="stat" role="listitem">
+                    <div class="number">简洁API</div>
+                    <div class="label">设计理念</div>
+                </article>
+                <article class="stat" role="listitem">
+                    <div class="number">批量操作</div>
+                    <div class="label">核心特性</div>
+                </article>
+                <article class="stat" role="listitem">
+                    <div class="number">统计监控</div>
+                    <div class="label">性能分析</div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 CacheKV. MIT License.</p>
+    </footer>
+
+    <script src="../assets/js/prism-core.min.js"></script>
+    <script src="../assets/js/prism-autoloader.min.js"></script>
+    <script>
+        // 复制代码功能
+        function copyCode(button) {
+            const codeBlock = button.nextElementSibling.querySelector('code');
+            const text = codeBlock.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = '已复制!';
+                button.style.background = '#10b981';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '';
+                }, 2000);
+            }).catch(() => {
+                // 降级方案
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                button.textContent = '已复制!';
+                setTimeout(() => {
+                    button.textContent = '复制';
+                }, 2000);
+            });
+        }
+
+        // Polyfill for older browsers
+        if (!window.IntersectionObserver) {
+            // Fallback for older browsers
+            document.querySelectorAll('.feature, .stat').forEach(function(el) {
+                el.style.animationPlayState = 'running';
+            });
+        } else {
+            // Header scroll effect
+            window.addEventListener('scroll', function() {
+                var header = document.getElementById('header');
+                if (window.pageYOffset > 100) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+
+            // Intersection Observer for animations
+            var observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            var observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationPlayState = 'running';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all animated elements
+            document.querySelectorAll('.feature, .stat').forEach(function(el) {
+                observer.observe(el);
+            });
+        }
+
+        // Smooth scrolling for navigation links with fallback
+        document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                var target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    if ('scrollBehavior' in document.documentElement.style) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    } else {
+                        // Fallback for older browsers
+                        var targetPosition = target.offsetTop - 80;
+                        window.scrollTo(0, targetPosition);
+                    }
+                }
+            });
+        });
+
+        // Add loading class removal for better performance
+        window.addEventListener('load', function() {
+            document.body.classList.add('loaded');
+        });
+    </script>
+    <noscript>
+        <style>
+            .feature, .stat { animation-play-state: running !important; }
+        </style>
+    </noscript>
+</body>
+</html>

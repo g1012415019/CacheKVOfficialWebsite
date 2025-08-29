@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CacheKV - 液态数字形态主义</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --surface-gradient: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255,255,255,0.8);
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 3rem;
+            --border-radius: 2rem;
+            --shadow-soft: 0 20px 60px rgba(0,0,0,0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #667eea 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .liquid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .liquid-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .blob-1 {
+            width: 300px;
+            height: 300px;
+            background: var(--secondary-gradient);
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .blob-2 {
+            width: 200px;
+            height: 200px;
+            background: var(--accent-gradient);
+            top: 60%;
+            right: 10%;
+            animation-delay: -7s;
+        }
+
+        .blob-3 {
+            width: 250px;
+            height: 250px;
+            background: var(--primary-gradient);
+            bottom: 20%;
+            left: 50%;
+            animation-delay: -14s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-lg);
+            position: relative;
+            z-index: 1;
+        }
+
+        .date-section {
+            background: var(--surface-gradient);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-soft);
+            transition: all 0.3s ease;
+        }
+
+        .date-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.3);
+        }
+
+        .date-text {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .title-system {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .main-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--spacing-sm);
+            animation: titleGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            from { filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.5)); }
+            to { filter: drop-shadow(0 0 40px rgba(118, 75, 162, 0.8)); }
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+        }
+
+        .quote-block {
+            background: var(--surface-gradient);
+            backdrop-filter: blur(20px);
+            border-left: 4px solid;
+            border-image: var(--accent-gradient) 1;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            padding: var(--spacing-lg);
+            margin: var(--spacing-xl) 0;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .quote-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--accent-gradient);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .quote-block:hover::before {
+            opacity: 0.1;
+        }
+
+        .quote-text {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.3rem;
+            color: var(--text-primary);
+            font-style: italic;
+            position: relative;
+            z-index: 1;
+        }
+
+        .features-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+            margin: var(--spacing-xl) 0;
+        }
+
+        .feature-item {
+            background: var(--surface-gradient);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-gradient);
+            opacity: 0.1;
+            transition: left 0.5s ease;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.4);
+        }
+
+        .feature-item:hover::before {
+            left: 0;
+        }
+
+        .feature-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-desc {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        .editor-note {
+            background: var(--surface-gradient);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            margin: var(--spacing-xl) 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .editor-note::before {
+            content: '💡';
+            position: absolute;
+            top: var(--spacing-md);
+            right: var(--spacing-md);
+            font-size: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .note-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .note-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .code-demo {
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(20px);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            margin: var(--spacing-xl) 0;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .code-demo::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent-gradient);
+            animation: codeFlow 3s linear infinite;
+        }
+
+        @keyframes codeFlow {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .code-text {
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--spacing-md);
+            }
+            
+            .features-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-title {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="liquid-bg">
+        <div class="liquid-blob blob-1"></div>
+        <div class="liquid-blob blob-2"></div>
+        <div class="liquid-blob blob-3"></div>
+    </div>
+
+    <div class="container">
+        <div class="date-section">
+            <div class="date-text" id="currentDate"></div>
+        </div>
+
+        <div class="title-system">
+            <h1 class="main-title">CacheKV</h1>
+            <p class="subtitle">流动的缓存艺术，数字形态的完美演绎</p>
+        </div>
+
+        <div class="quote-block">
+            <div class="quote-text">
+                "在数据的海洋中，CacheKV如液体般流畅地连接每一个节点，让缓存成为一种优雅的艺术形式。"
+            </div>
+        </div>
+
+        <div class="features-list">
+            <div class="feature-item">
+                <h3 class="feature-title">流体式缓存</h3>
+                <p class="feature-desc">如水银般流畅的缓存操作，让数据在系统中自然流动，无缝衔接每个环节。</p>
+            </div>
+            
+            <div class="feature-item">
+                <h3 class="feature-title">形态变换</h3>
+                <p class="feature-desc">支持多种缓存形态的动态转换，Redis、Memcached、文件缓存间的无缝切换。</p>
+            </div>
+            
+            <div class="feature-item">
+                <h3 class="feature-title">数字美学</h3>
+                <p class="feature-desc">将复杂的缓存逻辑转化为简洁优雅的代码艺术，一行代码实现完整缓存方案。</p>
+            </div>
+        </div>
+
+        <div class="code-demo">
+            <div class="code-text">
+// 液态缓存的优雅实现<br>
+$user = kv_get('user:profile', ['id' => 123], function() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return Database::find(123);<br>
+}, 3600);<br><br>
+// 形态变换，一键切换缓存驱动<br>
+kv_driver('redis')->set('key', $value);
+            </div>
+        </div>
+
+        <div class="editor-note">
+            <h4 class="note-title">设计理念</h4>
+            <p class="note-content">
+                CacheKV采用液态数字形态主义设计理念，将缓存操作视为数据的流动艺术。
+                每一次缓存读写都如液体般自然流畅，在保证性能的同时，为开发者带来美学享受。
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // 日期显示
+        function updateDate() {
+            const now = new Date();
+            const options = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                weekday: 'long'
+            };
+            document.getElementById('currentDate').textContent = 
+                now.toLocaleDateString('zh-CN', options);
+        }
+
+        // 液态背景动画增强
+        function enhanceLiquidEffect() {
+            const blobs = document.querySelectorAll('.liquid-blob');
+            blobs.forEach((blob, index) => {
+                blob.addEventListener('mouseenter', () => {
+                    blob.style.transform = 'scale(1.2)';
+                    blob.style.filter = 'blur(60px)';
+                });
+                
+                blob.addEventListener('mouseleave', () => {
+                    blob.style.transform = 'scale(1)';
+                    blob.style.filter = 'blur(40px)';
+                });
+            });
+        }
+
+        // 滚动视差效果
+        function initParallax() {
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                const blobs = document.querySelectorAll('.liquid-blob');
+                
+                blobs.forEach((blob, index) => {
+                    const speed = 0.5 + (index * 0.2);
+                    blob.style.transform = `translateY(${scrolled * speed}px)`;
+                });
+            });
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            updateDate();
+            enhanceLiquidEffect();
+            initParallax();
+        });
+    </script>
+</body>
+</html>

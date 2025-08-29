@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CacheKV - 现代科技渐变主义</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <link href="../assets/css/prism-tomorrow.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --accent-gradient: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            --quad-gradient: linear-gradient(-45deg, #667eea, #764ba2, #4facfe, #00f2fe);
+            --light-bg: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            --dark-bg: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --card-bg: rgba(30, 30, 30, 0.9);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.9);
+            --text-body: rgba(255, 255, 255, 0.8);
+            --text-muted: #999999;
+            --text-dark: #1e293b;
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 3rem;
+            --border-radius: 1rem;
+            --shadow-glass: 0 8px 32px rgba(31, 38, 135, 0.37);
+            --animation-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--quad-gradient);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            overflow-x: hidden;
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards, gradientShift 15s ease infinite;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .particle-field {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+
+        .particle:nth-child(1) {
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .particle:nth-child(2) {
+            left: 20%;
+            animation-delay: -2s;
+        }
+
+        .particle:nth-child(3) {
+            left: 30%;
+            animation-delay: -4s;
+        }
+
+        .particle:nth-child(4) {
+            left: 40%;
+            animation-delay: -6s;
+        }
+
+        .particle:nth-child(5) {
+            left: 50%;
+            animation-delay: -8s;
+        }
+
+        .particle:nth-child(6) {
+            left: 60%;
+            animation-delay: -10s;
+        }
+
+        .particle:nth-child(7) {
+            left: 70%;
+            animation-delay: -12s;
+        }
+
+        .particle:nth-child(8) {
+            left: 80%;
+            animation-delay: -14s;
+        }
+
+        .particle:nth-child(9) {
+            left: 90%;
+            animation-delay: -16s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-lg);
+        }
+
+        .nav-bar {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-glass);
+            transition: all var(--animation-speed) ease;
+        }
+
+        .nav-bar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.5);
+        }
+
+        .logo {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: var(--spacing-lg);
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all var(--animation-speed) ease;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: calc(var(--border-radius) / 2);
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+        }
+
+        .date-display {
+            display: none;
+        }
+
+        bottom: var(--spacing-lg);
+        right: var(--spacing-lg);
+        background: rgba(255, 255, 255, 0.1);
+        border: 3px solid #fff;
+        border-radius: 20px;
+        padding: var(--spacing-md);
+        box-shadow: 0 8px 32px rgba(255, 154, 158, 0.4);
+        z-index: 100;
+        animation: bounce 2s ease-in-out infinite alternate;
+        min-width: 120px;
+        text-align: center;
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: calc(var(--border-radius) / 2);
+        padding: var(--spacing-xs) var(--spacing-sm);
+        position: fixed;
+        top: var(--spacing-md);
+        right: var(--spacing-md);
+        z-index: 100;
+        box-shadow: var(--shadow-glass);
+        overflow: hidden;
+        animation: slideInRight 1s ease-out 0.5s both;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes bounce {
+            0% {
+                transform: translateY(0px);
+            }
+
+            100% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .date-display::before {
+            content: '🌸';
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            font-size: 2rem;
+            animation: rotate 4s linear infinite;
+        }
+
+        .date-display::after {
+            content: '✨';
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 1.5rem;
+            animation: twinkle 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes twinkle {
+            0% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+
+        .date-text {
+            font-family: 'Comic Sans MS', cursive, 'Noto Sans SC', sans-serif;
+            color: #ff6b9d;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+            line-height: 1.4;
+        }
+
+        .examples-section,
+        .quickstart-section,
+        .stats-section,
+        .features-section {
+            margin: var(--spacing-xl) 0;
+        }
+
+        .examples-section h2,
+        .quickstart-section h2,
+        .stats-section h2,
+        .features-section h2 {
+            text-align: center;
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--spacing-lg);
+            margin: var(--spacing-xl) 0;
+            align-items: start;
+        }
+
+        .example-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            transition: all var(--animation-speed) ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .example-card .terminal-card {
+            flex: 1;
+            margin-top: auto;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .example-card .terminal-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .example-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .example-card h3 {
+            color: var(--text-primary);
+            font-size: 1rem;
+            margin-bottom: var(--spacing-md);
+            font-weight: 500;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+
+        .code-toolbar {
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: var(--spacing-sm);
+            right: var(--spacing-sm);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: var(--text-secondary);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: calc(var(--border-radius) / 3);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            font-size: 0.75rem;
+            cursor: pointer;
+            z-index: 10;
+            transition: all var(--animation-speed) ease;
+            opacity: 0.7;
+        }
+
+        .copy-btn:hover {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.02);
+        }
+
+        .quickstart-step {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+            transition: all var(--animation-speed) ease;
+        }
+
+        .quickstart-step:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .quickstart-step h3 {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            margin-bottom: var(--spacing-md);
+            font-weight: 500;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-lg);
+            margin: var(--spacing-xl) 0;
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            text-align: center;
+            transition: all var(--animation-speed) ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-gradient);
+            opacity: 0.1;
+            transition: left 0.5s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-card:hover::before {
+            left: 0;
+        }
+
+        .stat-number {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-xs);
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-label {
+            color: var(--text-body);
+            font-size: 0.85rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-section {
+            text-align: center;
+            padding: var(--spacing-lg);
+            margin-top: var(--spacing-xl);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .main-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+            margin-bottom: var(--spacing-md);
+            animation: titleGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            from {
+                filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.5));
+            }
+
+            to {
+                filter: drop-shadow(0 0 40px rgba(118, 75, 162, 0.8));
+            }
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: center;
+            margin-bottom: var(--spacing-xl);
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: var(--spacing-md) var(--spacing-xl);
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all var(--animation-speed) ease;
+            position: relative;
+            overflow: hidden;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            color: var(--text-primary);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-secondary {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .terminal-card {
+            background: rgba(28, 28, 30, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: var(--border-radius);
+            padding: 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-glass);
+            transition: all var(--animation-speed) ease;
+        }
+
+        .terminal-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .terminal-header {
+            background: rgba(58, 58, 60, 0.9);
+            padding: var(--spacing-md);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot-red {
+            background: #ff5f57;
+        }
+
+        .dot-yellow {
+            background: #ffbd2e;
+        }
+
+        .dot-green {
+            background: #28ca42;
+        }
+
+        .terminal-card {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .examples-section .terminal-card {
+            height: 360px;
+            max-width: 100%;
+            margin: 0;
+        }
+
+        .terminal-content {
+            padding: var(--spacing-lg);
+        }
+
+        .terminal-content pre {
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            border: none;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #ffffff;
+            overflow-x: auto;
+        }
+
+        .terminal-content code {
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+            font-family: inherit;
+        }
+
+        /* Prism主题覆盖 */
+        pre[class*="language-"] {
+            background: transparent !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+        }
+
+        code[class*="language-"] {
+            background: transparent !important;
+            color: #ffffff !important;
+        }
+
+        .quote-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-left: 4px solid;
+            border-image: var(--secondary-gradient) 1;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            padding: var(--spacing-lg);
+            margin: var(--spacing-xl) 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quote-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--secondary-gradient);
+            opacity: 0;
+            transition: opacity var(--animation-speed) ease;
+        }
+
+        .quote-section:hover::before {
+            opacity: 0.1;
+        }
+
+        .quote-text {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            font-style: italic;
+            position: relative;
+            z-index: 1;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+            margin: var(--spacing-xl) 0;
+        }
+
+        .feature-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-gradient);
+            opacity: 0.1;
+            transition: left 0.5s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-card:hover::before {
+            left: 0;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-desc {
+            color: var(--text-body);
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        .editor-note {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            margin: var(--spacing-xl) 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .editor-note::before {
+            content: '💡';
+            position: absolute;
+            top: var(--spacing-md);
+            right: var(--spacing-md);
+            font-size: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        .note-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .note-content {
+            color: var(--text-body);
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--spacing-md);
+            }
+
+            .nav-bar {
+                flex-direction: column;
+                gap: var(--spacing-md);
+            }
+
+            .nav-links {
+                gap: var(--spacing-md);
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="particle-field">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <div class="container">
+        <nav class="nav-bar">
+            <div class="logo">CacheKV</div>
+            <ul class="nav-links">
+                <li><a href="#features">功能特性</a></li>
+                <li><a href="#examples">使用示例</a></li>
+                <li><a href="#quickstart">快速开始</a></li>
+                <li><a href="https://github.com/g1012415019/CacheKV">GitHub</a></li>
+            </ul>
+        </nav>
+
+        <div class="date-display">
+            <div class="date-kawaii" id="currentDate"></div>
+            <div class="time-kawaii" id="currentTime"></div>
+        </div>
+
+        <section class="hero-section">
+            <h1 class="main-title">CacheKV</h1>
+            <p class="subtitle">简化缓存操作的PHP库 - 专注于实现"若无则从数据源获取并回填缓存"这一常见模式</p>
+
+            <div class="cta-buttons">
+                <a href="#quickstart" class="btn btn-primary">立即开始</a>
+                <a href="https://packagist.org/packages/asfop/cache-kv" class="btn btn-secondary"
+                    target="_blank">Packagist</a>
+            </div>
+
+            <div class="terminal-card">
+                <div class="terminal-header">
+                    <div class="terminal-dot dot-red"></div>
+                    <div class="terminal-dot dot-yellow"></div>
+                    <div class="terminal-dot dot-green"></div>
+                </div>
+                <div class="terminal-content">
+                    <pre><code class="language-php">// 一行代码搞定：检查缓存 → 未命中则获取数据 → 自动回填缓存
+$data = kv_get('user.profile', ['id' => 123], function() {
+    return getUserFromDatabase(123); // 只在缓存未命中时执行
+});
+</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <div class="quote-section">
+            <div class="quote-text">
+                "在数字化的渐变光谱中，CacheKV以科技美学重新定义缓存操作，让每一行代码都散发着未来感的光芒。"
+            </div>
+        </div>
+
+        <section id="features" class="features-section">
+            <h2>核心功能</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3 class="feature-title">自动回填缓存</h3>
+                    <p class="feature-desc">缓存未命中时自动执行回调并缓存结果，简化开发流程</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">批量操作支持</h3>
+                    <p class="feature-desc">支持批量获取缓存数据，减少网络请求次数</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔥</div>
+                    <h3 class="feature-title">热点键管理</h3>
+                    <p class="feature-desc">自动检测并延长热点数据的缓存时间</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3 class="feature-title">统计监控</h3>
+                    <p class="feature-desc">提供命中率统计、热点键分析等监控功能</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3 class="feature-title">稳定可靠</h3>
+                    <p class="feature-desc">基于Redis构建，异常处理完善</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔧</div>
+                    <h3 class="feature-title">简单易用</h3>
+                    <p class="feature-desc">简洁的API设计，快速集成到现有项目</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="examples" class="examples-section">
+            <h2>使用示例</h2>
+            <div class="examples-grid">
+                <div class="example-card">
+                    <h3>基础用法</h3>
+                    <div class="code-toolbar">
+                        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                        <div class="terminal-card">
+                            <div class="terminal-header">
+                                <div class="terminal-dot dot-red"></div>
+                                <div class="terminal-dot dot-yellow"></div>
+                                <div class="terminal-dot dot-green"></div>
+                            </div>
+                            <div class="terminal-content">
+                                <pre><code class="language-php">// 基础用法 - 自动回填缓存
+$user = kv_get('user.profile', ['id' => 123], function() {
+    return getUserFromDatabase(123);
+});
+
+// 一行代码搞定：检查缓存 → 未命中则获取数据 → 自动回填缓存</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <h3>批量获取</h3>
+                    <div class="code-toolbar">
+                        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                        <div class="terminal-card">
+                            <div class="terminal-header">
+                                <div class="terminal-dot dot-red"></div>
+                                <div class="terminal-dot dot-yellow"></div>
+                                <div class="terminal-dot dot-green"></div>
+                            </div>
+                            <div class="terminal-content">
+                                <pre><code class="language-php">// 批量获取 - 避免N+1查询问题
+$users = kv_get_multi('user.profile', [
+    ['id' => 1], ['id' => 2], ['id' => 3]
+], function($missedKeys) {
+    $data = [];
+    foreach ($missedKeys as $cacheKey) {
+        $params = $cacheKey->getParams();
+        $data[(string)$cacheKey] = getUserFromDatabase($params['id']);
+    }
+    return $data;
+});</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <h3>删除缓存</h3>
+                    <div class="code-toolbar">
+                        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                        <div class="terminal-card">
+                            <div class="terminal-header">
+                                <div class="terminal-dot dot-red"></div>
+                                <div class="terminal-dot dot-yellow"></div>
+                                <div class="terminal-dot dot-green"></div>
+                            </div>
+                            <div class="terminal-content">
+                                <pre><code class="language-php">// 删除指定缓存
+kv_delete('user.profile', ['id' => 123]);
+
+// 按前缀删除（相当于按tag删除）
+kv_delete_prefix('user.profile');
+
+// 按完整前缀删除
+kv_delete_full('user:profile:');</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="quickstart" class="quickstart-section">
+            <h2>5分钟快速上手</h2>
+
+            <div class="quickstart-step">
+                <h3>1. 安装依赖</h3>
+                <div class="code-toolbar">
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    <div class="terminal-card">
+                        <div class="terminal-header">
+                            <div class="terminal-dot dot-red"></div>
+                            <div class="terminal-dot dot-yellow"></div>
+                            <div class="terminal-dot dot-green"></div>
+                        </div>
+                        <div class="terminal-content">
+                            <pre><code class="language-bash">composer require asfop/cache-kv</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quickstart-step">
+                <h3>2. 配置Redis连接</h3>
+                <div class="code-toolbar">
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    <div class="terminal-card">
+                        <div class="terminal-header">
+                            <div class="terminal-dot dot-red"></div>
+                            <div class="terminal-dot dot-yellow"></div>
+                            <div class="terminal-dot dot-green"></div>
+                        </div>
+                        <div class="terminal-content">
+                            <pre><code class="language-php">&lt;?php
+require_once 'vendor/autoload.php';
+use Asfop\CacheKV\Core\CacheKVFactory;
+
+// 配置Redis连接
+CacheKVFactory::configure(function () {
+    $redis = new Redis();
+    $redis->connect('127.0.0.1', 6379);
+    return $redis;
+});</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quickstart-step">
+                <h3>3. 开始使用</h3>
+                <div class="code-toolbar">
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    <div class="terminal-card">
+                        <div class="terminal-header">
+                            <div class="terminal-dot dot-red"></div>
+                            <div class="terminal-dot dot-yellow"></div>
+                            <div class="terminal-dot dot-green"></div>
+                        </div>
+                        <div class="terminal-content">
+                            <pre><code class="language-php">// 单个数据获取
+$user = kv_get(
+    'user.profile',
+    ['id' => 123],
+    function () {
+        return $this->userService->getUserById(123);
+    },
+    3600
+);
+
+// 批量数据获取
+$users = kv_get_multi(
+    'user.profile',
+    [['id' => 1], ['id' => 2], ['id' => 3]],
+    function ($missedKeys) {
+        $data = [];
+        foreach ($missedKeys as $cacheKey) {
+            $params = $cacheKey->getParams();
+            $data[(string) $cacheKey] = $this->userService->getUserById($params['id']);
+        }
+        return $data;
+    }
+);</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="stats-section">
+            <h2>技术规格</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">PHP 7.0+</div>
+                    <div class="stat-label">版本要求</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">asfop/cache-kv</div>
+                    <div class="stat-label">Packagist包名</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">自动回填</div>
+                    <div class="stat-label">核心特性</div>
+                </div>
+            </div>
+        </section>
+        <footer class="footer-section">
+            <p>&copy; 2024 CacheKV. MIT License.</p>
+        </footer>
+    </div>
+
+    <script src="../assets/js/prism-core.min.js"></script>
+    <script src="../assets/js/prism-autoloader.min.js"></script>
+    <script>
+        // 可爱日期时间显示 - 精确到秒
+        function updateDateTime() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+
+            const dateElement = document.getElementById('currentDate');
+            const timeElement = document.getElementById('currentTime');
+
+            if (dateElement) {
+                dateElement.textContent = `${year}年${month}月${day}日`;
+            }
+            if (timeElement) {
+                timeElement.textContent = `${hours}:${minutes}:${seconds}`;
+            }
+        }
+
+        // 导航栏时间显示 - 数字动态更新
+        function updateNavTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+
+            const navTimeElement = document.getElementById('navTime');
+            if (navTimeElement) {
+                navTimeElement.textContent = `${hours}:${minutes}:${seconds}`;
+            }
+        }
+
+        // 复制代码功能
+        function copyCode(button) {
+            const codeBlock = button.parentElement.querySelector('code');
+            if (!codeBlock) return;
+
+            const text = codeBlock.textContent;
+
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showCopySuccess(button);
+                }).catch(() => {
+                    fallbackCopyTextToClipboard(text, button);
+                });
+            } else {
+                fallbackCopyTextToClipboard(text, button);
+            }
+        }
+
+        function fallbackCopyTextToClipboard(text, button) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.position = "fixed";
+
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                document.execCommand('copy');
+                showCopySuccess(button);
+            } catch (err) {
+                console.error('复制失败:', err);
+            }
+
+            document.body.removeChild(textArea);
+        }
+
+        function showCopySuccess(button) {
+            const originalText = button.textContent;
+            button.textContent = '已复制!';
+            button.style.background = 'var(--accent-gradient)';
+
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.style.background = 'var(--secondary-gradient)';
+            }, 2000);
+        }
+
+        // 粒子系统增强
+        function enhanceParticleSystem() {
+            const particles = document.querySelectorAll('.particle');
+            particles.forEach((particle, index) => {
+                // 随机大小
+                const size = Math.random() * 3 + 2;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+
+                // 随机透明度
+                const opacity = Math.random() * 0.5 + 0.3;
+                particle.style.opacity = opacity;
+
+                // 鼠标交互
+                particle.addEventListener('mouseenter', () => {
+                    particle.style.transform = 'scale(2)';
+                    particle.style.opacity = '1';
+                });
+
+                particle.addEventListener('mouseleave', () => {
+                    particle.style.transform = 'scale(1)';
+                    particle.style.opacity = opacity;
+                });
+            });
+        }
+
+        // 滚动视差效果
+        function initScrollParallax() {
+            let ticking = false;
+
+            function updateParallax() {
+                const scrolled = window.pageYOffset;
+                const particles = document.querySelectorAll('.particle');
+
+                particles.forEach((particle, index) => {
+                    const speed = 0.3 + (index * 0.1);
+                    particle.style.transform = `translateY(${scrolled * speed}px)`;
+                });
+
+                ticking = false;
+            }
+
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    requestAnimationFrame(updateParallax);
+                    ticking = true;
+                }
+            });
+        }
+
+        // 渐变动画增强
+        function enhanceGradientAnimations() {
+            const cards = document.querySelectorAll('.feature-card, .terminal-card, .quote-section, .example-card, .stat-card');
+
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.animationDuration = '1s';
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    card.style.animationDuration = '15s';
+                });
+            });
+        }
+
+        // 平滑滚动
+        function initSmoothScroll() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        }
+
+        // 初始化系统
+        document.addEventListener('DOMContentLoaded', () => {
+            enhanceParticleSystem();
+            initScrollParallax();
+            enhanceGradientAnimations();
+            initSmoothScroll();
+
+            // 初始化Prism代码高亮
+            if (typeof Prism !== 'undefined') {
+                Prism.highlightAll();
+            }
+        });
+
+        // 全局复制函数
+        window.copyCode = copyCode;
+    </script>
+</body>
+
+</html>
