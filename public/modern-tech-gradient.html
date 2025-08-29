@@ -1139,8 +1139,27 @@ $users = kv_get_multi(
 
     <script src="../assets/js/prism-core.min.js"></script>
     <script src="../assets/js/prism-markup.min.js"></script>
-    <script src="../assets/js/prism-php.min.js"></script>
-    <script src="../assets/js/prism-bash.min.js"></script>
+    <script>
+        // 等待DOM加载完成后再加载其他组件
+        document.addEventListener('DOMContentLoaded', function() {
+            // 动态加载PHP组件
+            var phpScript = document.createElement('script');
+            phpScript.src = '../assets/js/prism-php.min.js';
+            document.head.appendChild(phpScript);
+            
+            // 动态加载Bash组件
+            var bashScript = document.createElement('script');
+            bashScript.src = '../assets/js/prism-bash.min.js';
+            document.head.appendChild(bashScript);
+            
+            // 延迟执行高亮
+            setTimeout(function() {
+                if (typeof Prism !== 'undefined') {
+                    Prism.highlightAll();
+                }
+            }, 100);
+        });
+    </script>
     <script>
         // 可爱日期时间显示 - 精确到秒
         function updateDateTime() {
